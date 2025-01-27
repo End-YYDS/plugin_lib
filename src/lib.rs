@@ -8,6 +8,12 @@ pub trait Plugin: Send + Sync + Debug {
     fn description(&self) -> &str;
     fn scope(&self) -> Scope;
     fn register_routes(&self) -> ProvideUrl;
+    fn signature(&self) -> Option<String> {
+        None
+    }
+    fn frontend_file(&self) -> Option<String> {
+        None
+    }
 }
 impl Plugin for Box<dyn Plugin> {
     fn name(&self) -> &str {
@@ -24,6 +30,12 @@ impl Plugin for Box<dyn Plugin> {
     }
     fn register_routes(&self) -> ProvideUrl {
         self.as_ref().register_routes()
+    }
+    fn signature(&self) -> Option<String> {
+        self.as_ref().signature()
+    }
+    fn frontend_file(&self) -> Option<String> {
+        self.as_ref().frontend_file()
     }
 }
 
@@ -68,10 +80,14 @@ impl Plugin for Box<dyn Plugin> {
 macro_rules! declare_plugin {
     (
         $plugin_struct: ident,
-        $name:expr,
-        $version:expr,
-        $description:expr,
-        $scope:expr,
+        meta: {
+            $name:expr,
+            $version:expr,
+            $description:expr,
+            $scope:expr,
+            $sig:expr
+        },
+        $frontend_file:expr,
         functions: {$($path:expr => {method: $method:expr, handler: $handler:expr}),* $(,)?}
     ) => {
         impl plugin_lib::Plugin for $plugin_struct {
@@ -93,6 +109,18 @@ macro_rules! declare_plugin {
                         ($path.to_string(),Box::new(|| $method.to($handler))),
                     )*
                 ]
+            }
+            fn frontend_file(&self) -> Option<String> {
+                match $frontend_file {
+                    "" => None,
+                    file => Some(file.to_string())
+                }
+            }
+            fn signature(&self) -> Option<String> {
+                match $sig {
+                    "" => None,
+                    sig => Some(sig.to_string())
+                }
             }
         }
     };
