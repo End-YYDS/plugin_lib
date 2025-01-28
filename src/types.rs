@@ -6,6 +6,7 @@ pub type Provides = Vec<String>;
 
 #[derive(Debug, serde::Serialize)]
 pub struct PluginMeta {
+    pub id: usize,
     pub name: String,
     pub version: String,
     pub description: String,
