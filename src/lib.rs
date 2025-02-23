@@ -44,10 +44,13 @@ impl Plugin for Box<dyn Plugin> {
 /// # Arguments
 ///
 /// * `plugin_struct` - 實作 Plugin trait 的結構體
-/// * `name` - 插件名稱
-/// * `version` - 插件版本號
-/// * `description` - 插件描述
-/// * `scope` - 插件作用域
+/// * `meta` - 插件元數據
+///     * `name` - 插件名稱
+///     * `version` - 插件版本號
+///     * `description` - 插件描述
+///     * `scope` - 插件作用域
+///     * `sig` - 插件簽名
+/// * `frontend_file` - 前端文件
 /// * `functions` - 路由設定
 ///    * `path` - 路由路徑
 ///    * `method` - HTTP方法
