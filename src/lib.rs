@@ -70,10 +70,14 @@ impl Plugin for Box<dyn Plugin> {
 ///
 /// declare_plugin!(
 ///     MyPlugin,
-///     "example-plugin",
-///     "1.0.0",
-///     "A demo plugin",
-///     "global",
+///     meta: {
+///         "example-plugin",
+///         "1.0.0",
+///         "A demo plugin",
+///         "global",
+///         ""
+///     }
+///     "forntend_page.js",
 ///     functions: {
 ///         "/api/hello" => {method: actix_web::web::get(), handler: MyPlugin::hello_handler}
 ///     }
